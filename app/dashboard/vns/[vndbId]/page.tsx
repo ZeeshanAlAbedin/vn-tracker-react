@@ -1,1 +1,8 @@
 // Visual Novel details page, purpose is to show user_vns, vn_progress, user_vn_reviews from database but also additional vn details from VNDB API
+
+export default function Home() {
+  return (
+  <div>
+    Dashboard/Vns
+  </div>);
+}
