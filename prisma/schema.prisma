@@ -12,3 +12,33 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model users {
+  // Primary key
+  id          String    @id @db.Uuid @default(uuid())
+  created_at  DateTime  @default(now()) @db.Timestamptz
+  email       String    @unique
+  display_name String   @unique
+  avatar_url  String?   @db.Text
+  password_hash String? @db.Text
+  is_auth     Boolean   @default(false)
+
+  // Relation: one user has many oauth_account records
+  oauth_accounts oauth_account[]
+
+}
+
+model oauth_account {
+  id                  String   @id @db.Uuid @default(uuid())
+  created_at          DateTime @default(now()) @db.Timestamptz
+  user_id             String   @db.Uuid
+  provider            String   @db.VarChar
+  provider_acount_id  String   @db.VarChar
+
+  // Relation fields
+  user users @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  // Add unique constraints that match DB unique columns
+  @@unique([provider])
+  @@unique([provider_acount_id])
+}
