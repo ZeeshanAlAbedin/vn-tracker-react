@@ -39,3 +39,9 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 Site color pallete  - #6B3F69, #8D5F8C, #A376A2, #DDC3C3
+
+    Background: #1C1C1C (soft black)
+    Primary Text: #F5E8D8 (warm beige)
+    Accent 1: #FF6F61 (muted coral)
+    Accent 2: #DAA520 (golden yellow)
+    Hover Effects: #FF4500 (burnt orange)
