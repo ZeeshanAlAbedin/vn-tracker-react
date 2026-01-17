@@ -17,7 +17,7 @@ export default function signup() {
         confirmPassword: '',
     });
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<any>) => {
         const { name, value } = e.target;
         
         // Update form data
