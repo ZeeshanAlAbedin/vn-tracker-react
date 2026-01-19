@@ -1,5 +1,6 @@
 'use client';
 
+import SiteNameHeading from '@/app/components/appname-heading';
 import { useState } from 'react';
 
 export default function signup() {
@@ -71,7 +72,7 @@ export default function signup() {
             <div className="w-full max-w-md overflow-y-auto max-h-screen">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-[#FF6F61] mb-2">VN-Tracker</h1>
+                    <SiteNameHeading />
                     <p className="text-[#F5E8D8] opacity-75">Please register to continue</p>
                 </div>
 

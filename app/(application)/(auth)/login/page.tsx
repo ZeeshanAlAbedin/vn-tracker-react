@@ -1,3 +1,4 @@
+import SiteNameHeading from "@/app/components/appname-heading";
 import { SignInButton } from "@/app/components/sign-in-button";
 
 export default function signin() {
@@ -6,7 +7,7 @@ export default function signin() {
             <div className="w-full max-w-md overflow-y-auto max-h-screen">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-[#FF6F61] mb-2">VN-Tracker</h1>
+                    <SiteNameHeading />
                     <h2 className="text-2xl font-semibold text-[#F5E8D8] mb-2">Welcome Back</h2>
                     <p className="text-[#F5E8D8] opacity-75">Please login to continue</p>
                 </div>
