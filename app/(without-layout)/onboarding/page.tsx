@@ -6,18 +6,38 @@ import { useSession } from 'next-auth/react';
 import ConfirmPopup from '@/app/components/confirm-popup';
 import Checkbox from '@/app/components/checkbox';
 import SiteNameHeading from '@/app/components/appname-heading';
-
+import { createUserOnboarding, getUserByEmail } from '@/app/actions/user';
+ 
 export default function onboarding() {
     const router = useRouter();
     const { data: session } = useSession();
     const [showPopup, setShowPopup] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
+    const [userExists, setUserExists] = useState<boolean | null>(null);
+
     useEffect(() => {
         if (!session?.user) {
             setShowPopup(true);
         }
     }, [session]);
- 
+
+    useEffect(() => {
+        if (session?.user?.email) {
+            getUserByEmail(session.user.email).then(user => {
+                setUserExists(!!user);
+            });
+        }
+    }, [session]);
+
+    if (userExists === true) {
+        router.push('/dashboard');
+        return null;
+    }
+
+    if (userExists === null) {
+        return <div>Loading...</div>; // or a spinner
+    }
+
     return (
         <>
             <ConfirmPopup
@@ -46,7 +66,16 @@ export default function onboarding() {
                 </div>
 
                     {/* Signup form */}
-                    <form className="space-y-5 mb-6" >
+                    <form className="space-y-5 mb-6" 
+                        onSubmit={async (e) => {
+                        e.preventDefault();
+                        const formData = new FormData(e.target as HTMLFormElement);
+                        formData.append('avatarUrl', session?.user?.image || '');
+                        formData.append('email', session?.user?.email || '');
+                        await createUserOnboarding(formData);
+                        router.push('/dashboard');
+                    }}
+                    >
                         <div>
                             <label htmlFor="displayname" className="block text-[#F5E8D8] font-medium mb-2">
                                 Display Name

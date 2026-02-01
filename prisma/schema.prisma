@@ -14,32 +14,54 @@ datasource db {
   provider = "postgresql"
 }
 
-model users {
-  // Primary key
-  id          String    @id @db.Uuid @default(uuid())
-  created_at  DateTime  @default(now()) @db.Timestamptz
-  email       String    @unique
-  display_name String   @unique
-  avatar_url  String?   @db.Text
-  password_hash String? @db.Text
-  is_auth     Boolean   @default(false)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-  // Relation: one user has many oauth_account records
-  oauth_accounts oauth_account[]
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
-model oauth_account {
-  id                  String   @id @db.Uuid @default(uuid())
-  created_at          DateTime @default(now()) @db.Timestamptz
-  user_id             String   @db.Uuid
-  provider            String   @db.VarChar
-  provider_acount_id  String   @db.VarChar
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Relation fields
-  user users @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@map("sessions")
+}
 
-  // Add unique constraints that match DB unique columns
-  @@unique([provider])
-  @@unique([provider_acount_id])
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  passwordHash  String?  
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }

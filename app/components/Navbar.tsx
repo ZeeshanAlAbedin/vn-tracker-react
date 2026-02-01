@@ -2,10 +2,13 @@ import Link from 'next/link';
 import { auth } from "@/auth";
 import LogoutButton from './logout-button';
 import LoginButton from './login-button';
+import { getUserByEmail } from '@/app/actions/user';
+import UserMenu from './UserMenu';
 
 export default async function Navbar() {
     //Get the session from server
     const session = await auth();
+    const user = session?.user?.email ? await getUserByEmail(session.user.email) : null;
     
     return (
         <nav className="bg-[#1C1C1C] border-b-2 border-[#FF6F61] py-4">
@@ -36,25 +39,25 @@ export default async function Navbar() {
                                 Dashboard
                                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#DAA520] group-hover:w-full transition-all duration-300"></span>
                             </Link>
-                            <Link 
-                                href="/settings" 
-                                className="text-[#F5E8D8] hover:text-[#FF4500] transition-colors duration-300 relative group"
-                            >
-                                Settings
-                                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#DAA520] group-hover:w-full transition-all duration-300"></span>
-                            </Link>
+                           
                         </>
                     )}
 
                     {
                         session ? (
-                            <>
-                                <LogoutButton />
-                            </>
+                            <UserMenu user={user} />
                         ) : (
                             <div>
-                                <LoginButton />
-                            </div>    
+                                <Link 
+                                href="/login" 
+                                className="text-[#F5E8D8] hover:text-[#FF4500] transition-colors duration-300 relative group"
+                            >
+                                Login
+                                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#DAA520] group-hover:w-full transition-all duration-300"></span>
+                                </Link>
+                               
+                            </div>  
+                            
                         )
                     }
 
